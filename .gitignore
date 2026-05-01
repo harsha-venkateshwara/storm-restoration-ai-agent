@@ -3,6 +3,8 @@ data/raw/
 data/processed/
 data/features/
 
+outputs/models/evaluation_results.pkl
+
 # Model weights (too large for GitHub)
 outputs/models/lstm_multitask_best.pt
 outputs/models/gradient_boosting_final.pkl
