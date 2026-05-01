@@ -1,0 +1,47 @@
+# Large data files
+data/raw/
+data/processed/
+data/features/
+
+# Model weights (too large for GitHub)
+outputs/models/lstm_multitask_best.pt
+outputs/models/gradient_boosting_final.pkl
+outputs/models/logistic_regression_final.pkl
+outputs/models/feature_scaler.pkl
+outputs/models/training_results.pkl
+
+# Keep these (small, needed for dashboard)
+!outputs/models/evaluation_results.pkl
+!outputs/models/county_priority_2022.parquet
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Environments
+.env
+.venv
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/secrets.toml
+
+# IDE
+.vscode/
+.idea/

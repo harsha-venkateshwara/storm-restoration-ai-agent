@@ -1,0 +1,17 @@
+# Storm Restoration Prioritization AI
+#Requirements
+# Install all dependencies
+# pip install -r requirements.txt
+
+torch>=2.0.0
+torchvision
+pandas>=2.0
+numpy>=1.24
+pyarrow>=12.0
+scikit-learn>=1.3
+streamlit>=1.32
+plotly>=5.18
+matplotlib>=3.7
+seaborn
+openpyxl
+fastparquet

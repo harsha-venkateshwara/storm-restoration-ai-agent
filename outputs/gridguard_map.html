@@ -1,0 +1,3284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_4af6ba75e55c6394c7e14b78b79884d0 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+<div style='position:fixed;bottom:30px;left:20px;z-index:1000;
+            background:rgba(15,23,42,0.92);color:white;
+            padding:12px 16px;border-radius:8px;
+            border:1px solid #1e293b;font-family:sans-serif;
+            font-size:12px;min-width:200px;'>
+  <b style='color:#60a5fa;font-size:14px;'>GridGuard AI</b><br/>
+  <span style='color:#94a3b8;font-size:10px;'>Long Island Grid Alert System</span>
+  <hr style='border-color:#1e293b;margin:8px 0;'/>
+  <div><span style='color:#ef4444;'>&#9679;</span> At-Risk Substation</div>
+  <div><span style='color:#f59e0b;'>&#9679;</span> Elevated Risk Substation</div>
+  <div><span style='color:#3b82f6;'>&#9679;</span> Normal Substation</div>
+  <hr style='border-color:#1e293b;margin:8px 0;'/>
+  <div><span style='color:#ef4444;'>&#9632;</span> CRITICAL Alert (Hospital)</div>
+  <div><span style='color:#f59e0b;'>&#9632;</span> HIGH Alert (Fire Station)</div>
+  <div><span style='color:#3b82f6;'>&#9632;</span> MEDIUM Alert (School)</div>
+  <hr style='border-color:#1e293b;margin:8px 0;'/>
+  <div style='color:#94a3b8;font-size:10px;'>
+    Click any marker for details<br/>
+    Dashed lines = alert routing paths
+  </div>
+</div>
+    
+            <div class="folium-map" id="map_4af6ba75e55c6394c7e14b78b79884d0" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_4af6ba75e55c6394c7e14b78b79884d0 = L.map(
+                "map_4af6ba75e55c6394c7e14b78b79884d0",
+                {
+                    center: [40.75, -73.2],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_888d919e0e764a742675bb60282b7c1b = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_888d919e0e764a742675bb60282b7c1b.addTo(map_4af6ba75e55c6394c7e14b78b79884d0);
+        
+    
+        function geo_json_952d5d35e1f5b17021bc65d944dfd7d9_styler(feature) {
+            switch(feature.properties.name) {
+                default:
+                    return {"color": "#ef4444", "dashArray": "6 4", "fillColor": "#ef4444", "fillOpacity": 0.12, "weight": 2.5};
+            }
+        }
+
+        function geo_json_952d5d35e1f5b17021bc65d944dfd7d9_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_952d5d35e1f5b17021bc65d944dfd7d9 = L.geoJson(null, {
+                onEachFeature: geo_json_952d5d35e1f5b17021bc65d944dfd7d9_onEachFeature,
+            
+                style: geo_json_952d5d35e1f5b17021bc65d944dfd7d9_styler,
+            ...{
+}
+        });
+
+        function geo_json_952d5d35e1f5b17021bc65d944dfd7d9_add (data) {
+            geo_json_952d5d35e1f5b17021bc65d944dfd7d9
+                .addData(data);
+        }
+            geo_json_952d5d35e1f5b17021bc65d944dfd7d9_add({"features": [{"geometry": {"coordinates": [[[-71.3108138366871, 40.346348968396406], [-71.33375245833327, 40.15286859918831], [-71.38105859730867, 39.96201285044279], [-71.45208879456173, 39.77558196086343], [-71.54599490254584, 39.595321347891], [-71.66173752211505, 39.42290704955919], [-71.79810001019592, 39.25993208583387], [-71.95370287083809, 39.10789376137906], [-72.1270183892807, 38.96818192912551], [-72.31638540952318, 38.84206823488533], [-72.52002418959965, 38.7306963663114], [-72.73605129508299, 38.635073333520296], [-72.96249451061807, 38.55606181256355], [-73.19730776227928, 38.494373585718776], [-73.4383860513266, 38.45056411359186], [-73.68358040371466, 38.425028272864814], [-73.93071284072298, 38.41799729006757], [-74.17759137546196, 38.42953689614371], [-74.42202503870772, 38.4595467192089], [-74.6618389362009, 38.50776092433847], [-74.89488933855118, 38.57375010016143], [-75.11907880421597, 38.65692438321263], [-75.3323713353081, 38.756537803100926], [-75.53280756455503, 38.87169382516663], [-75.71851996863312, 39.00135206282453], [-75.88774809720262, 39.14433612937646], [-76.03885379705328, 39.299342598618814], [-76.17033639566066, 39.464951044667785], [-76.28084778714462, 39.63963513340531], [-76.36920733543444, 39.82177473990483], [-76.43441647417461, 40.00966906703315], [-76.4756728409584, 40.201550738955746], [-76.49238373601024, 40.39560083830019], [-76.48417864444015, 40.58996484617314], [-76.45092050953821, 40.78276942922423], [-76.39271539598451, 40.97213999699867], [-76.30992014078235, 41.15621892587579], [-76.20314756114207, 41.33318431346412], [-76.07326877758615, 41.5012690905389], [-75.92141222205817, 41.65878027821947], [-75.74895893881578, 41.80411813843467], [-75.55753385297574, 41.93579492863001], [-75.34899277837827, 42.052452940253424], [-75.12540506113615, 42.15288147799221], [-74.88903190331045, 42.23603242597242], [-74.64230057540138, 42.30103405057975], [-74.38777489719175, 42.347202708786185], [-74.12812253270117, 42.37405216635388], [-73.86607979467009, 42.38130028128269], [-73.60441477565323, 42.36887287234267], [-73.3458897067212, 42.33690466730024], [-73.09322348402229, 42.28573730638879], [-72.84905529473228, 42.21591445900947], [-72.6159102179341, 42.128174190746826], [-72.39616757736069, 42.02343878901929], [-72.1920326897353, 41.9028023152344], [-72.00551249513134, 41.76751619638726], [-71.83839538612227, 41.618973198052636], [-71.69223538233496, 41.45869013338157], [-71.56834063713208, 41.288289659926335], [-71.46776612236401, 41.10948149980371], [-71.3913102217655, 40.924043391523064], [-71.33951487721437, 40.733802046855914], [-71.31266887565805, 40.54061434663149], [-71.3108138366871, 40.346348968396406]]], "type": "Polygon"}, "properties": {"name": "Hurricane Sandy 2012", "storm": "Hurricane Sandy 2012"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_952d5d35e1f5b17021bc65d944dfd7d9.bindTooltip(
+                `<div>
+                     Hurricane Sandy Impact Zone
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_952d5d35e1f5b17021bc65d944dfd7d9.addTo(map_4af6ba75e55c6394c7e14b78b79884d0);
+        
+    
+            var feature_group_d6f76edc956f9e03eea36271f3aa2e3f = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_d9b934ec0f3491fcb86175579897f0a9 = L.polyline(
+                [[40.7454, -73.6399], [40.7335, -73.6346]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_d9b934ec0f3491fcb86175579897f0a9.bindTooltip(
+                `<div>
+                     distribution | 1.45 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_e6c201516fbb4773d5834809167a11b6 = L.polyline(
+                [[40.7454, -73.6399], [40.7062, -73.6188]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_e6c201516fbb4773d5834809167a11b6.bindTooltip(
+                `<div>
+                     distribution | 4.94 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_5ba8aad1ec197d299f16742ae38536b0 = L.polyline(
+                [[40.7454, -73.6399], [40.789, -73.7271]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_5ba8aad1ec197d299f16742ae38536b0.bindTooltip(
+                `<div>
+                     distribution | 10.82 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_3c349f0d3af726666e93237847b8035f = L.polyline(
+                [[40.7454, -73.6399], [40.6443, -73.5832]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_3c349f0d3af726666e93237847b8035f.bindTooltip(
+                `<div>
+                     distribution | 12.87 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_21a223a53eb00c6d752441db972adac4 = L.polyline(
+                [[40.7683, -73.5218], [40.7429, -73.4818]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_21a223a53eb00c6d752441db972adac4.bindTooltip(
+                `<div>
+                     distribution | 5.26 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_8a5553f5d38b993b6e434f957835fae1 = L.polyline(
+                [[40.7683, -73.5218], [40.7315, -73.4393]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_8a5553f5d38b993b6e434f957835fae1.bindTooltip(
+                `<div>
+                     distribution | 10.03 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_cebdbafbdd0d73d23c90c5794ad431db = L.polyline(
+                [[40.7683, -73.5218], [40.6815, -73.4588]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_cebdbafbdd0d73d23c90c5794ad431db.bindTooltip(
+                `<div>
+                     distribution | 11.91 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_fd2543cb1336849f60bdf19f16d78398 = L.polyline(
+                [[40.7025, -73.3196], [40.6906, -73.3729]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_fd2543cb1336849f60bdf19f16d78398.bindTooltip(
+                `<div>
+                     distribution | 6.06 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_c4ced5dcbe4075fa4ccb4794774fbef3 = L.polyline(
+                [[40.7025, -73.3196], [40.7812, -73.2453]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_c4ced5dcbe4075fa4ccb4794774fbef3.bindTooltip(
+                `<div>
+                     distribution | 12.01 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_3e1648a25efe79b3645c0f51b1f00256 = L.polyline(
+                [[40.7025, -73.3196], [40.7315, -73.4393]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_3e1648a25efe79b3645c0f51b1f00256.bindTooltip(
+                `<div>
+                     distribution | 13.67 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_01d762854b3274cc401ae0023f0f4d35 = L.polyline(
+                [[40.8229, -73.2079], [40.7812, -73.2453]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_01d762854b3274cc401ae0023f0f4d35.bindTooltip(
+                `<div>
+                     distribution | 6.22 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_5d76c0adcee135675fb43badad68c844 = L.polyline(
+                [[40.8229, -73.2079], [40.8217, -73.1237]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_5d76c0adcee135675fb43badad68c844.bindTooltip(
+                `<div>
+                     distribution | 9.35 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_5dd8cd1f8a718e8bc921c55e131bfc47 = L.polyline(
+                [[40.8229, -73.2079], [40.9026, -73.3429]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_5dd8cd1f8a718e8bc921c55e131bfc47.bindTooltip(
+                `<div>
+                     distribution | 17.4 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_884fa928594fd822c6a7555f289b2f5f = L.polyline(
+                [[40.7429, -73.4818], [40.7315, -73.4393]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_884fa928594fd822c6a7555f289b2f5f.bindTooltip(
+                `<div>
+                     distribution | 4.88 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_83f6899fc68c440e5aa67c4d47a48950 = L.polyline(
+                [[40.7429, -73.4818], [40.6815, -73.4588]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_83f6899fc68c440e5aa67c4d47a48950.bindTooltip(
+                `<div>
+                     distribution | 7.28 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_599915d971c80321d23346013680e33f = L.polyline(
+                [[40.7335, -73.6346], [40.7062, -73.6188]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_599915d971c80321d23346013680e33f.bindTooltip(
+                `<div>
+                     distribution | 3.5 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_77d736334d12e8bc4ddd19ece782211e = L.polyline(
+                [[40.7335, -73.6346], [40.6443, -73.5832]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_77d736334d12e8bc4ddd19ece782211e.bindTooltip(
+                `<div>
+                     distribution | 11.43 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_b01cadf548608cf58bb5d9f3c98d0be4 = L.polyline(
+                [[40.7335, -73.6346], [40.789, -73.7271]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_b01cadf548608cf58bb5d9f3c98d0be4.bindTooltip(
+                `<div>
+                     distribution | 11.97 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_75132c2d98f961647a7f96909b6de578 = L.polyline(
+                [[40.7062, -73.6188], [40.6443, -73.5832]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_75132c2d98f961647a7f96909b6de578.bindTooltip(
+                `<div>
+                     distribution | 7.93 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_97b4c0e652332c91d88b4b2f6f5ca523 = L.polyline(
+                [[40.7062, -73.6188], [40.789, -73.7271]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_97b4c0e652332c91d88b4b2f6f5ca523.bindTooltip(
+                `<div>
+                     distribution | 15.13 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_706a294415368b04bea2774127a5fef7 = L.polyline(
+                [[40.7812, -73.2453], [40.8217, -73.1237]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_706a294415368b04bea2774127a5fef7.bindTooltip(
+                `<div>
+                     distribution | 14.23 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_ce97319184766732474aea427e86b4db = L.polyline(
+                [[40.7812, -73.2453], [40.9026, -73.3429]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_ce97319184766732474aea427e86b4db.bindTooltip(
+                `<div>
+                     distribution | 17.29 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_3e4859da131ecd6c580a6441047f4326 = L.polyline(
+                [[40.7315, -73.4393], [40.6815, -73.4588]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_3e4859da131ecd6c580a6441047f4326.bindTooltip(
+                `<div>
+                     distribution | 5.96 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_2cf22379f97eb76188b5e2f567502e62 = L.polyline(
+                [[40.7315, -73.4393], [40.6906, -73.3729]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_2cf22379f97eb76188b5e2f567502e62.bindTooltip(
+                `<div>
+                     distribution | 8.66 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_2eb8fb4eed239e258b759f4646a77dee = L.polyline(
+                [[40.7315, -73.4393], [40.9026, -73.3429]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_2eb8fb4eed239e258b759f4646a77dee.bindTooltip(
+                `<div>
+                     distribution | 21.8 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_ffc2c0ea0ad36f82b4ee4c17254df048 = L.polyline(
+                [[40.8217, -73.1237], [40.765, -73.0149]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_ffc2c0ea0ad36f82b4ee4c17254df048.bindTooltip(
+                `<div>
+                     distribution | 13.62 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_b7626af402555a0ee2d804bf2f7609f0 = L.polyline(
+                [[40.8217, -73.1237], [40.9454, -73.0493]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_b7626af402555a0ee2d804bf2f7609f0.bindTooltip(
+                `<div>
+                     distribution | 16.02 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_5f70be59469bf873043b54b5a839feb6 = L.polyline(
+                [[40.8217, -73.1237], [40.8168, -72.9773]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_5f70be59469bf873043b54b5a839feb6.bindTooltip(
+                `<div>
+                     distribution | 16.26 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_8e959106a3fa5f8f23959451e24b8ccf = L.polyline(
+                [[40.765, -73.0149], [40.8168, -72.9773]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_8e959106a3fa5f8f23959451e24b8ccf.bindTooltip(
+                `<div>
+                     distribution | 7.1 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_ac5676cbfbed5ee84a95529c6f63add2 = L.polyline(
+                [[40.765, -73.0149], [40.8642, -72.9688]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_ac5676cbfbed5ee84a95529c6f63add2.bindTooltip(
+                `<div>
+                     distribution | 12.14 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_db31daf4a457a9c5f27efea02c397e1c = L.polyline(
+                [[40.9454, -73.0493], [40.8642, -72.9688]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_db31daf4a457a9c5f27efea02c397e1c.bindTooltip(
+                `<div>
+                     distribution | 12.69 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_8d8f1c45fd13bcecbf7750691334c05a = L.polyline(
+                [[40.9454, -73.0493], [40.8168, -72.9773]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_8d8f1c45fd13bcecbf7750691334c05a.bindTooltip(
+                `<div>
+                     distribution | 16.36 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_48da4cc0650ebf0fe920873b23b45951 = L.polyline(
+                [[40.6906, -73.3729], [40.6815, -73.4588]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_48da4cc0650ebf0fe920873b23b45951.bindTooltip(
+                `<div>
+                     distribution | 9.59 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_c93905ab16cabc05c619de6fe4e9607a = L.polyline(
+                [[40.8642, -72.9688], [40.8168, -72.9773]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_d6f76edc956f9e03eea36271f3aa2e3f);
+        
+    
+            poly_line_c93905ab16cabc05c619de6fe4e9607a.bindTooltip(
+                `<div>
+                     distribution | 5.35 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_d6f76edc956f9e03eea36271f3aa2e3f.addTo(map_4af6ba75e55c6394c7e14b78b79884d0);
+        
+    
+            var feature_group_632fda3a48b22211198455cd6b994d18 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_221fdbe8d6d954c7b7322a0384361496 = L.circleMarker(
+                [40.7454, -73.6399],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_4957c2b29b701216b5c7b7723e24ea7c = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_81d0dd2eae7603308c1b0bd15c85318e = $(`<div id="html_81d0dd2eae7603308c1b0bd15c85318e" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Mineola Substation</b><br/>       Voltage: 138 kV<br/>       Type: transmission<br/>       Risk Score: <b>0.999</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_4957c2b29b701216b5c7b7723e24ea7c.setContent(html_81d0dd2eae7603308c1b0bd15c85318e);
+            
+        
+
+        circle_marker_221fdbe8d6d954c7b7322a0384361496.bindPopup(popup_4957c2b29b701216b5c7b7723e24ea7c)
+        ;
+
+        
+    
+    
+            circle_marker_221fdbe8d6d954c7b7322a0384361496.bindTooltip(
+                `<div>
+                     Mineola Substation | Risk: 0.999
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b35d5c199c83f10ff7bc118826093c3a = L.circleMarker(
+                [40.7683, -73.5218],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_3463309e3712b2d35d3ff710224ec351 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_788546f157610794b570e5a06b65d644 = $(`<div id="html_788546f157610794b570e5a06b65d644" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Hicksville Substation</b><br/>       Voltage: 115 kV<br/>       Type: transmission<br/>       Risk Score: <b>0.984</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_3463309e3712b2d35d3ff710224ec351.setContent(html_788546f157610794b570e5a06b65d644);
+            
+        
+
+        circle_marker_b35d5c199c83f10ff7bc118826093c3a.bindPopup(popup_3463309e3712b2d35d3ff710224ec351)
+        ;
+
+        
+    
+    
+            circle_marker_b35d5c199c83f10ff7bc118826093c3a.bindTooltip(
+                `<div>
+                     Hicksville Substation | Risk: 0.984
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7c9a546e69e023f2613cfaf7691d3216 = L.circleMarker(
+                [40.7025, -73.3196],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_ddd681581585ddeb4729a184a3094347 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_461b98a1746f2fcd6dd661b6b9677496 = $(`<div id="html_461b98a1746f2fcd6dd661b6b9677496" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Babylon Substation</b><br/>       Voltage: 138 kV<br/>       Type: transmission<br/>       Risk Score: <b>0.837</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_ddd681581585ddeb4729a184a3094347.setContent(html_461b98a1746f2fcd6dd661b6b9677496);
+            
+        
+
+        circle_marker_7c9a546e69e023f2613cfaf7691d3216.bindPopup(popup_ddd681581585ddeb4729a184a3094347)
+        ;
+
+        
+    
+    
+            circle_marker_7c9a546e69e023f2613cfaf7691d3216.bindTooltip(
+                `<div>
+                     Babylon Substation | Risk: 0.837
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_bc49bf2d8f0372e1ed43273a07b9373d = L.circleMarker(
+                [40.9148, -72.6626],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_91fa23d046edc374d33364df2d7aaa91 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_96b65e10897fadf7d2f4257078651523 = $(`<div id="html_96b65e10897fadf7d2f4257078651523" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Riverhead Substation</b><br/>       Voltage: 115 kV<br/>       Type: transmission<br/>       Risk Score: <b>0.837</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_91fa23d046edc374d33364df2d7aaa91.setContent(html_96b65e10897fadf7d2f4257078651523);
+            
+        
+
+        circle_marker_bc49bf2d8f0372e1ed43273a07b9373d.bindPopup(popup_91fa23d046edc374d33364df2d7aaa91)
+        ;
+
+        
+    
+    
+            circle_marker_bc49bf2d8f0372e1ed43273a07b9373d.bindTooltip(
+                `<div>
+                     Riverhead Substation | Risk: 0.837
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_51250271262299095c6389e81413f1a2 = L.circleMarker(
+                [40.8229, -73.2079],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_4a91ab530c5ab6f7ff5ac8203fe8776e = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_b8432191caad1af805b1d0779ad4b026 = $(`<div id="html_b8432191caad1af805b1d0779ad4b026" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Hauppauge Substation</b><br/>       Voltage: 138 kV<br/>       Type: transmission<br/>       Risk Score: <b>0.837</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_4a91ab530c5ab6f7ff5ac8203fe8776e.setContent(html_b8432191caad1af805b1d0779ad4b026);
+            
+        
+
+        circle_marker_51250271262299095c6389e81413f1a2.bindPopup(popup_4a91ab530c5ab6f7ff5ac8203fe8776e)
+        ;
+
+        
+    
+    
+            circle_marker_51250271262299095c6389e81413f1a2.bindTooltip(
+                `<div>
+                     Hauppauge Substation | Risk: 0.837
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f0049f732cc7fe41e7f5c43e839b5c09 = L.circleMarker(
+                [40.7429, -73.4818],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_3e1a403d4e06ee34ac6782f9563dc97c = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_891058c1b664c9454d3bae7f56558b5b = $(`<div id="html_891058c1b664c9454d3bae7f56558b5b" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Bethpage Substation</b><br/>       Voltage: 115 kV<br/>       Type: distribution<br/>       Risk Score: <b>0.984</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_3e1a403d4e06ee34ac6782f9563dc97c.setContent(html_891058c1b664c9454d3bae7f56558b5b);
+            
+        
+
+        circle_marker_f0049f732cc7fe41e7f5c43e839b5c09.bindPopup(popup_3e1a403d4e06ee34ac6782f9563dc97c)
+        ;
+
+        
+    
+    
+            circle_marker_f0049f732cc7fe41e7f5c43e839b5c09.bindTooltip(
+                `<div>
+                     Bethpage Substation | Risk: 0.984
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0bd3cf90ba4ef11611c0b94055fc3f6c = L.circleMarker(
+                [40.7335, -73.6346],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_a4a32a4f9d766a9591593c3f99036e94 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_c45cbb77bce68afc8df1abb36972b66e = $(`<div id="html_c45cbb77bce68afc8df1abb36972b66e" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Garden City Substation</b><br/>       Voltage: 115 kV<br/>       Type: distribution<br/>       Risk Score: <b>0.999</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_a4a32a4f9d766a9591593c3f99036e94.setContent(html_c45cbb77bce68afc8df1abb36972b66e);
+            
+        
+
+        circle_marker_0bd3cf90ba4ef11611c0b94055fc3f6c.bindPopup(popup_a4a32a4f9d766a9591593c3f99036e94)
+        ;
+
+        
+    
+    
+            circle_marker_0bd3cf90ba4ef11611c0b94055fc3f6c.bindTooltip(
+                `<div>
+                     Garden City Substation | Risk: 0.999
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cb3509653dcce78b703b68a9089c35b4 = L.circleMarker(
+                [40.7062, -73.6188],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_56f0864d08a6e2a3f85861675fb56aa3 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_14b58eca4f04fbb934459e13a9e7f871 = $(`<div id="html_14b58eca4f04fbb934459e13a9e7f871" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Hempstead Substation</b><br/>       Voltage: 138 kV<br/>       Type: transmission<br/>       Risk Score: <b>0.999</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_56f0864d08a6e2a3f85861675fb56aa3.setContent(html_14b58eca4f04fbb934459e13a9e7f871);
+            
+        
+
+        circle_marker_cb3509653dcce78b703b68a9089c35b4.bindPopup(popup_56f0864d08a6e2a3f85861675fb56aa3)
+        ;
+
+        
+    
+    
+            circle_marker_cb3509653dcce78b703b68a9089c35b4.bindTooltip(
+                `<div>
+                     Hempstead Substation | Risk: 0.999
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c7d08bf94b1b9126613f9c78a1e0a778 = L.circleMarker(
+                [40.7812, -73.2453],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_2dac6be48943d3698832e246dc784090 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_470f0aba0bc90a551b371b7312684d71 = $(`<div id="html_470f0aba0bc90a551b371b7312684d71" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Brentwood Substation</b><br/>       Voltage: 115 kV<br/>       Type: distribution<br/>       Risk Score: <b>0.837</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_2dac6be48943d3698832e246dc784090.setContent(html_470f0aba0bc90a551b371b7312684d71);
+            
+        
+
+        circle_marker_c7d08bf94b1b9126613f9c78a1e0a778.bindPopup(popup_2dac6be48943d3698832e246dc784090)
+        ;
+
+        
+    
+    
+            circle_marker_c7d08bf94b1b9126613f9c78a1e0a778.bindTooltip(
+                `<div>
+                     Brentwood Substation | Risk: 0.837
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e41a11a3ffe89409398cf001b95d8831 = L.circleMarker(
+                [40.7315, -73.4393],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_7272c78790ba0cb439dca503e1a2aea7 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_9822f440c8b13e2cdb20eef31f2eb537 = $(`<div id="html_9822f440c8b13e2cdb20eef31f2eb537" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Farmingdale Substation</b><br/>       Voltage: 138 kV<br/>       Type: distribution<br/>       Risk Score: <b>0.984</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_7272c78790ba0cb439dca503e1a2aea7.setContent(html_9822f440c8b13e2cdb20eef31f2eb537);
+            
+        
+
+        circle_marker_e41a11a3ffe89409398cf001b95d8831.bindPopup(popup_7272c78790ba0cb439dca503e1a2aea7)
+        ;
+
+        
+    
+    
+            circle_marker_e41a11a3ffe89409398cf001b95d8831.bindTooltip(
+                `<div>
+                     Farmingdale Substation | Risk: 0.984
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c078d49e405641a9907b39f3e798e4c7 = L.circleMarker(
+                [40.8217, -73.1237],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_bb444c528c148cf1394d6349bf8682cd = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_691092aa2589ee092f18cd151d4bc3db = $(`<div id="html_691092aa2589ee092f18cd151d4bc3db" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Ronkonkoma Substation</b><br/>       Voltage: 115 kV<br/>       Type: distribution<br/>       Risk Score: <b>0.837</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_bb444c528c148cf1394d6349bf8682cd.setContent(html_691092aa2589ee092f18cd151d4bc3db);
+            
+        
+
+        circle_marker_c078d49e405641a9907b39f3e798e4c7.bindPopup(popup_bb444c528c148cf1394d6349bf8682cd)
+        ;
+
+        
+    
+    
+            circle_marker_c078d49e405641a9907b39f3e798e4c7.bindTooltip(
+                `<div>
+                     Ronkonkoma Substation | Risk: 0.837
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ff4a9b413297ac1cb794d2815eb9084b = L.circleMarker(
+                [40.765, -73.0149],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_ce226b84e62b0b82003442f6c1623700 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_93485c7a95ab26e933af7022d52bbb98 = $(`<div id="html_93485c7a95ab26e933af7022d52bbb98" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Patchogue Substation</b><br/>       Voltage: 115 kV<br/>       Type: distribution<br/>       Risk Score: <b>0.837</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_ce226b84e62b0b82003442f6c1623700.setContent(html_93485c7a95ab26e933af7022d52bbb98);
+            
+        
+
+        circle_marker_ff4a9b413297ac1cb794d2815eb9084b.bindPopup(popup_ce226b84e62b0b82003442f6c1623700)
+        ;
+
+        
+    
+    
+            circle_marker_ff4a9b413297ac1cb794d2815eb9084b.bindTooltip(
+                `<div>
+                     Patchogue Substation | Risk: 0.837
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_faac5bafceecb3c701072b3dae7aa966 = L.circleMarker(
+                [40.9026, -73.3429],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_c1ad37bc448afcb212f9f0b369a55739 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_e4cbc7ef8097c82889d17dbcb5edfeda = $(`<div id="html_e4cbc7ef8097c82889d17dbcb5edfeda" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Northport Substation</b><br/>       Voltage: 138 kV<br/>       Type: transmission<br/>       Risk Score: <b>0.837</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_c1ad37bc448afcb212f9f0b369a55739.setContent(html_e4cbc7ef8097c82889d17dbcb5edfeda);
+            
+        
+
+        circle_marker_faac5bafceecb3c701072b3dae7aa966.bindPopup(popup_c1ad37bc448afcb212f9f0b369a55739)
+        ;
+
+        
+    
+    
+            circle_marker_faac5bafceecb3c701072b3dae7aa966.bindTooltip(
+                `<div>
+                     Northport Substation | Risk: 0.837
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d9ea7c55f732b2d2623dc4328fec7a45 = L.circleMarker(
+                [40.9454, -73.0493],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_1cbb22ffcac39b6a913b1861d8c74adb = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_3b1adfa3fc33ddebfa0f12f0ae8863e8 = $(`<div id="html_3b1adfa3fc33ddebfa0f12f0ae8863e8" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Port Jefferson Substation</b><br/>       Voltage: 115 kV<br/>       Type: distribution<br/>       Risk Score: <b>0.837</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_1cbb22ffcac39b6a913b1861d8c74adb.setContent(html_3b1adfa3fc33ddebfa0f12f0ae8863e8);
+            
+        
+
+        circle_marker_d9ea7c55f732b2d2623dc4328fec7a45.bindPopup(popup_1cbb22ffcac39b6a913b1861d8c74adb)
+        ;
+
+        
+    
+    
+            circle_marker_d9ea7c55f732b2d2623dc4328fec7a45.bindTooltip(
+                `<div>
+                     Port Jefferson Substation | Risk: 0.837
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b95ba9c4494d7c11ac7093c4136357fd = L.circleMarker(
+                [40.6906, -73.3729],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_99feffee356c49e3c4b9f06fdfca2ed3 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_ec1a49aa45031f332e7360c9a113e0bf = $(`<div id="html_ec1a49aa45031f332e7360c9a113e0bf" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Lindenhurst Substation</b><br/>       Voltage: 115 kV<br/>       Type: distribution<br/>       Risk Score: <b>0.837</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_99feffee356c49e3c4b9f06fdfca2ed3.setContent(html_ec1a49aa45031f332e7360c9a113e0bf);
+            
+        
+
+        circle_marker_b95ba9c4494d7c11ac7093c4136357fd.bindPopup(popup_99feffee356c49e3c4b9f06fdfca2ed3)
+        ;
+
+        
+    
+    
+            circle_marker_b95ba9c4494d7c11ac7093c4136357fd.bindTooltip(
+                `<div>
+                     Lindenhurst Substation | Risk: 0.837
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cec9dd3f8997c1220f7ec8800b86e9a0 = L.circleMarker(
+                [40.789, -73.7271],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_cf7c4656433fb2d1dbf29fab7bcd7fc4 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_3c6455480f521eef10b5f05651ea252f = $(`<div id="html_3c6455480f521eef10b5f05651ea252f" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Great Neck Substation</b><br/>       Voltage: 115 kV<br/>       Type: distribution<br/>       Risk Score: <b>0.999</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_cf7c4656433fb2d1dbf29fab7bcd7fc4.setContent(html_3c6455480f521eef10b5f05651ea252f);
+            
+        
+
+        circle_marker_cec9dd3f8997c1220f7ec8800b86e9a0.bindPopup(popup_cf7c4656433fb2d1dbf29fab7bcd7fc4)
+        ;
+
+        
+    
+    
+            circle_marker_cec9dd3f8997c1220f7ec8800b86e9a0.bindTooltip(
+                `<div>
+                     Great Neck Substation | Risk: 0.999
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f4616dbc775125611f46c039fc2fe425 = L.circleMarker(
+                [40.6443, -73.5832],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_e3b657fd1513d7b95a666f81db41e154 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_ce87ce9052c98de6bd2b8f79e4bd3de9 = $(`<div id="html_ce87ce9052c98de6bd2b8f79e4bd3de9" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Freeport Substation</b><br/>       Voltage: 115 kV<br/>       Type: distribution<br/>       Risk Score: <b>0.984</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_e3b657fd1513d7b95a666f81db41e154.setContent(html_ce87ce9052c98de6bd2b8f79e4bd3de9);
+            
+        
+
+        circle_marker_f4616dbc775125611f46c039fc2fe425.bindPopup(popup_e3b657fd1513d7b95a666f81db41e154)
+        ;
+
+        
+    
+    
+            circle_marker_f4616dbc775125611f46c039fc2fe425.bindTooltip(
+                `<div>
+                     Freeport Substation | Risk: 0.984
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a3e6587736e2a571870f74b246b41504 = L.circleMarker(
+                [40.6815, -73.4588],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_c881c1ffea84ce1a89129a588ba9292d = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_27f38f6e6faea96d60780f637aea0290 = $(`<div id="html_27f38f6e6faea96d60780f637aea0290" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Massapequa Substation</b><br/>       Voltage: 115 kV<br/>       Type: distribution<br/>       Risk Score: <b>0.984</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_c881c1ffea84ce1a89129a588ba9292d.setContent(html_27f38f6e6faea96d60780f637aea0290);
+            
+        
+
+        circle_marker_a3e6587736e2a571870f74b246b41504.bindPopup(popup_c881c1ffea84ce1a89129a588ba9292d)
+        ;
+
+        
+    
+    
+            circle_marker_a3e6587736e2a571870f74b246b41504.bindTooltip(
+                `<div>
+                     Massapequa Substation | Risk: 0.984
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9f682b7dbefc73b4e508fbbd0f8c537d = L.circleMarker(
+                [40.8642, -72.9688],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_d932832b8088de194d73818f51596415 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_1185fe77059c5c4d081055017e5e76b1 = $(`<div id="html_1185fe77059c5c4d081055017e5e76b1" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Coram Substation</b><br/>       Voltage: 115 kV<br/>       Type: distribution<br/>       Risk Score: <b>0.837</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_d932832b8088de194d73818f51596415.setContent(html_1185fe77059c5c4d081055017e5e76b1);
+            
+        
+
+        circle_marker_9f682b7dbefc73b4e508fbbd0f8c537d.bindPopup(popup_d932832b8088de194d73818f51596415)
+        ;
+
+        
+    
+    
+            circle_marker_9f682b7dbefc73b4e508fbbd0f8c537d.bindTooltip(
+                `<div>
+                     Coram Substation | Risk: 0.837
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_516f3d014a27397fd1db5cfd2fef3a2a = L.circleMarker(
+                [40.8168, -72.9773],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef4444", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12, "stroke": true, "weight": 3}
+            ).addTo(feature_group_632fda3a48b22211198455cd6b994d18);
+        
+    
+        var popup_01e36881863bc357657ea511e6843ad5 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_73fc287bb216883a009e8ddd46ac4c7e = $(`<div id="html_73fc287bb216883a009e8ddd46ac4c7e" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:180px;'>       <b style='color:#ef4444;'>Medford Substation</b><br/>       Voltage: 115 kV<br/>       Type: distribution<br/>       Risk Score: <b>0.837</b><br/>       Storm Zone: YES     </div></div>`)[0];
+                popup_01e36881863bc357657ea511e6843ad5.setContent(html_73fc287bb216883a009e8ddd46ac4c7e);
+            
+        
+
+        circle_marker_516f3d014a27397fd1db5cfd2fef3a2a.bindPopup(popup_01e36881863bc357657ea511e6843ad5)
+        ;
+
+        
+    
+    
+            circle_marker_516f3d014a27397fd1db5cfd2fef3a2a.bindTooltip(
+                `<div>
+                     Medford Substation | Risk: 0.837
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_632fda3a48b22211198455cd6b994d18.addTo(map_4af6ba75e55c6394c7e14b78b79884d0);
+        
+    
+            var feature_group_a370a6bbdc3a7b3103d91d7786de1a30 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_40246ecae10613b040bc49e2c37df5bb = L.polyline(
+                [[40.7454, -73.6399], [40.7531, -73.7057]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_40246ecae10613b040bc49e2c37df5bb.bindTooltip(
+                `<div>
+                     Route: Mineola Substation → Long Island Jewish Medical Center
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_abe33134c893f969145157f84b999064 = L.polyline(
+                [[40.7454, -73.6399], [40.7856, -73.6354]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_abe33134c893f969145157f84b999064.bindTooltip(
+                `<div>
+                     Route: Mineola Substation → St. Francis Hospital
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_cf2a468fcfde3bdd9719e07f0b49eb9e = L.polyline(
+                [[40.7454, -73.6399], [40.7454, -73.6388]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_cf2a468fcfde3bdd9719e07f0b49eb9e.bindTooltip(
+                `<div>
+                     Route: Mineola Substation → Winthrop University Hospital
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_6858d437d773d1bd504b28f7118ff043 = L.polyline(
+                [[40.7454, -73.6399], [40.8623, -73.6254]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_6858d437d773d1bd504b28f7118ff043.bindTooltip(
+                `<div>
+                     Route: Mineola Substation → Glen Cove Hospital
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_74122a21bca5efe1d87da88015b28437 = L.polyline(
+                [[40.7335, -73.6346], [40.7193, -73.5965]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_74122a21bca5efe1d87da88015b28437.bindTooltip(
+                `<div>
+                     Route: Garden City Substation → NYU Langone Hospital Long Island
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_b882cb9682655e9ce841c537dd47c192 = L.polyline(
+                [[40.6443, -73.5832], [40.6655, -73.5205]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_b882cb9682655e9ce841c537dd47c192.bindTooltip(
+                `<div>
+                     Route: Freeport Substation → South Shore University Hospital
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_f4d3cda9f572ebf1712f7c958b7eb3d7 = L.polyline(
+                [[40.7683, -73.5218], [40.7731, -73.5553]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_f4d3cda9f572ebf1712f7c958b7eb3d7.bindTooltip(
+                `<div>
+                     Route: Hicksville Substation → North Shore University Hospital
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_f48134b8d53a4d1ebe606a3f1ab3ae39 = L.polyline(
+                [[40.7683, -73.5218], [40.8812, -73.4256]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_f48134b8d53a4d1ebe606a3f1ab3ae39.bindTooltip(
+                `<div>
+                     Route: Hicksville Substation → Huntington Hospital
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_16a37da2c0646f799c0bed23b1dc62bc = L.polyline(
+                [[40.7812, -73.2453], [40.7239, -73.1496]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_16a37da2c0646f799c0bed23b1dc62bc.bindTooltip(
+                `<div>
+                     Route: Brentwood Substation → Good Samaritan Hospital Medical Center
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_3e3b71c13ec6602a4559aaea846a73a3 = L.polyline(
+                [[40.7812, -73.2453], [40.7325, -73.1538]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_3e3b71c13ec6602a4559aaea846a73a3.bindTooltip(
+                `<div>
+                     Route: Brentwood Substation → Southside Hospital
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_3afff9683ba5910e010847b25aa09f7b = L.polyline(
+                [[40.9148, -72.6626], [40.9192, -72.6543]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_3afff9683ba5910e010847b25aa09f7b.bindTooltip(
+                `<div>
+                     Route: Riverhead Substation → Peconic Bay Medical Center
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_705a759049b3403163847ec16bad603c = L.polyline(
+                [[40.8217, -73.1237], [40.9121, -73.1137]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_705a759049b3403163847ec16bad603c.bindTooltip(
+                `<div>
+                     Route: Ronkonkoma Substation → Stony Brook University Hospital
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_c9ad01f3090c84d4d53f2f41002d3416 = L.polyline(
+                [[40.8217, -73.1237], [40.8692, -73.1149]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_c9ad01f3090c84d4d53f2f41002d3416.bindTooltip(
+                `<div>
+                     Route: Ronkonkoma Substation → St. Catherine of Siena Medical Center
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_37809204aeb90b7f5724c93e63207c5c = L.polyline(
+                [[40.9454, -73.0493], [40.9463, -73.0482]],
+                {"bubblingMouseEvents": true, "color": "#ef4444", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#ef4444", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_37809204aeb90b7f5724c93e63207c5c.bindTooltip(
+                `<div>
+                     Route: Port Jefferson Substation → John T. Mather Memorial Hospital
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_2d2bb4fed6621e867a2802a91b6c009d = L.polyline(
+                [[40.7454, -73.6399], [40.7454, -73.6399]],
+                {"bubblingMouseEvents": true, "color": "#f59e0b", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#f59e0b", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_2d2bb4fed6621e867a2802a91b6c009d.bindTooltip(
+                `<div>
+                     Route: Mineola Substation → Mineola FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_f2d7bb78b1a0b08f9c2fd61479d03c66 = L.polyline(
+                [[40.7454, -73.6399], [40.7268, -73.6346]],
+                {"bubblingMouseEvents": true, "color": "#f59e0b", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#f59e0b", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_f2d7bb78b1a0b08f9c2fd61479d03c66.bindTooltip(
+                `<div>
+                     Route: Mineola Substation → Garden City FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_2bc0aeb5b3a7e2d30aa7e7e67e525aa5 = L.polyline(
+                [[40.7335, -73.6346], [40.7062, -73.6188]],
+                {"bubblingMouseEvents": true, "color": "#f59e0b", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#f59e0b", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_2bc0aeb5b3a7e2d30aa7e7e67e525aa5.bindTooltip(
+                `<div>
+                     Route: Garden City Substation → Hempstead FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_a90134f269dbae951d98f348e4e2d6a3 = L.polyline(
+                [[40.7335, -73.6346], [40.6626, -73.7082]],
+                {"bubblingMouseEvents": true, "color": "#f59e0b", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#f59e0b", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_a90134f269dbae951d98f348e4e2d6a3.bindTooltip(
+                `<div>
+                     Route: Garden City Substation → Valley Stream FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_3ea5ae9298e5dff8267b80e605bed2f8 = L.polyline(
+                [[40.7429, -73.4818], [40.8695, -73.4256]],
+                {"bubblingMouseEvents": true, "color": "#f59e0b", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#f59e0b", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_3ea5ae9298e5dff8267b80e605bed2f8.bindTooltip(
+                `<div>
+                     Route: Bethpage Substation → Huntington FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_55576e7313cd19995edabc59c0d20a62 = L.polyline(
+                [[40.7315, -73.4393], [40.6815, -73.4588]],
+                {"bubblingMouseEvents": true, "color": "#f59e0b", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#f59e0b", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_55576e7313cd19995edabc59c0d20a62.bindTooltip(
+                `<div>
+                     Route: Farmingdale Substation → Massapequa FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_6daaaf3c1e38ad17866564230ac5b336 = L.polyline(
+                [[40.7025, -73.3196], [40.7025, -73.3196]],
+                {"bubblingMouseEvents": true, "color": "#f59e0b", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#f59e0b", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_6daaaf3c1e38ad17866564230ac5b336.bindTooltip(
+                `<div>
+                     Route: Babylon Substation → Babylon FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_68ab6c035fa9e43b4a8a284fb1e73235 = L.polyline(
+                [[40.7025, -73.3196], [40.7284, -73.248]],
+                {"bubblingMouseEvents": true, "color": "#f59e0b", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#f59e0b", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_68ab6c035fa9e43b4a8a284fb1e73235.bindTooltip(
+                `<div>
+                     Route: Babylon Substation → Bay Shore FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_64d93bf71fb3df8a6b003f412f5ee6f4 = L.polyline(
+                [[40.7025, -73.3196], [40.6906, -73.3729]],
+                {"bubblingMouseEvents": true, "color": "#f59e0b", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#f59e0b", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_64d93bf71fb3df8a6b003f412f5ee6f4.bindTooltip(
+                `<div>
+                     Route: Babylon Substation → Lindenhurst FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_2084ac7dbfe1e9d9c3aa8776efaf7f81 = L.polyline(
+                [[40.7812, -73.2453], [40.8434, -73.302]],
+                {"bubblingMouseEvents": true, "color": "#f59e0b", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#f59e0b", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_2084ac7dbfe1e9d9c3aa8776efaf7f81.bindTooltip(
+                `<div>
+                     Route: Brentwood Substation → Commack FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_84cd2b5bc1b06b330829165a2c77bc5d = L.polyline(
+                [[40.8229, -73.2079], [40.7812, -73.2453]],
+                {"bubblingMouseEvents": true, "color": "#f59e0b", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#f59e0b", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_84cd2b5bc1b06b330829165a2c77bc5d.bindTooltip(
+                `<div>
+                     Route: Hauppauge Substation → Brentwood FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_49f45b775b11d72572a371c1a061bda8 = L.polyline(
+                [[40.8229, -73.2079], [40.8229, -73.2079]],
+                {"bubblingMouseEvents": true, "color": "#f59e0b", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#f59e0b", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_49f45b775b11d72572a371c1a061bda8.bindTooltip(
+                `<div>
+                     Route: Hauppauge Substation → Hauppauge FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_8eb5d568465bb3ebc1f516328913f8f9 = L.polyline(
+                [[40.8229, -73.2079], [40.729, -73.2121]],
+                {"bubblingMouseEvents": true, "color": "#f59e0b", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#f59e0b", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_8eb5d568465bb3ebc1f516328913f8f9.bindTooltip(
+                `<div>
+                     Route: Hauppauge Substation → Islip FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_1aa955cbc361f0f3b310f16fe9c46666 = L.polyline(
+                [[40.9148, -72.6626], [40.9148, -72.6626]],
+                {"bubblingMouseEvents": true, "color": "#f59e0b", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#f59e0b", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_1aa955cbc361f0f3b310f16fe9c46666.bindTooltip(
+                `<div>
+                     Route: Riverhead Substation → Riverhead FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_91f89fe22e709557b1cbc2704ca4376c = L.polyline(
+                [[40.765, -73.0149], [40.765, -73.0149]],
+                {"bubblingMouseEvents": true, "color": "#f59e0b", "dashArray": "8 5", "dashOffset": null, "fill": false, "fillColor": "#f59e0b", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.0}
+            ).addTo(feature_group_a370a6bbdc3a7b3103d91d7786de1a30);
+        
+    
+            poly_line_91f89fe22e709557b1cbc2704ca4376c.bindTooltip(
+                `<div>
+                     Route: Patchogue Substation → Patchogue FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_a370a6bbdc3a7b3103d91d7786de1a30.addTo(map_4af6ba75e55c6394c7e14b78b79884d0);
+        
+    
+            var feature_group_8327de6e68d62b95828ff8e6dd27e86b = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_e0ccd3fd492ec78e8df5bbb207662b19 = L.marker(
+                [40.7531, -73.7057],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_13d3fc71cdd759687b068d8d28652db7 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "plus-square",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_9056b9079d706c6991e17e5ed967d631 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_bce6aad1476b4af61945edb7cb6a1bf6 = $(`<div id="html_bce6aad1476b4af61945edb7cb6a1bf6" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#ef4444;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         CRITICAL ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Long Island Jewish Medical Center</b><br/>Beds: <b>583</b> | Trauma: <b>LEVEL II</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Mineola Substation<br/>           Substation risk: 0.999<br/>           Distance (hops): 1<br/>           Alert score: 9.990         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>IMMEDIATE ACTION: Activate emergency generators now. Alert backup power team. Notify generator fuel supplier. Contact backup facility for patient diversion plan.</span>       </div>     </div></div>`)[0];
+                popup_9056b9079d706c6991e17e5ed967d631.setContent(html_bce6aad1476b4af61945edb7cb6a1bf6);
+            
+        
+
+        marker_e0ccd3fd492ec78e8df5bbb207662b19.bindPopup(popup_9056b9079d706c6991e17e5ed967d631)
+        ;
+
+        
+    
+    
+            marker_e0ccd3fd492ec78e8df5bbb207662b19.bindTooltip(
+                `<div>
+                     CRITICAL: Long Island Jewish Medical Center
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_e0ccd3fd492ec78e8df5bbb207662b19.setIcon(icon_13d3fc71cdd759687b068d8d28652db7);
+            
+    
+            var marker_68f0ca2d211658e8dbd91831abb0b512 = L.marker(
+                [40.7856, -73.6354],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_4bcfb086e6275f57a81377c2ee441981 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "plus-square",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_b365912464bc8cc39a7cc47936f93c03 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_137e4a342716470bc6c2097837a77e9e = $(`<div id="html_137e4a342716470bc6c2097837a77e9e" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#ef4444;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         CRITICAL ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>St. Francis Hospital</b><br/>Beds: <b>306</b> | Trauma: <b>LEVEL II</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Mineola Substation<br/>           Substation risk: 0.999<br/>           Distance (hops): 1<br/>           Alert score: 9.990         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>IMMEDIATE ACTION: Activate emergency generators now. Alert backup power team. Notify generator fuel supplier. Contact backup facility for patient diversion plan.</span>       </div>     </div></div>`)[0];
+                popup_b365912464bc8cc39a7cc47936f93c03.setContent(html_137e4a342716470bc6c2097837a77e9e);
+            
+        
+
+        marker_68f0ca2d211658e8dbd91831abb0b512.bindPopup(popup_b365912464bc8cc39a7cc47936f93c03)
+        ;
+
+        
+    
+    
+            marker_68f0ca2d211658e8dbd91831abb0b512.bindTooltip(
+                `<div>
+                     CRITICAL: St. Francis Hospital
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_68f0ca2d211658e8dbd91831abb0b512.setIcon(icon_4bcfb086e6275f57a81377c2ee441981);
+            
+    
+            var marker_0ea94f9eb5207afd155196a6fff94fcd = L.marker(
+                [40.7454, -73.6388],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_cc51905346f46a7a87771afc94709f98 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "plus-square",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_da77292ac8b2e992d1f484cc1437bea2 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_2aa392b2c11f8cf3fd77a3fdbf7cd15a = $(`<div id="html_2aa392b2c11f8cf3fd77a3fdbf7cd15a" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#ef4444;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         CRITICAL ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Winthrop University Hospital</b><br/>Beds: <b>591</b> | Trauma: <b>LEVEL II</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Mineola Substation<br/>           Substation risk: 0.999<br/>           Distance (hops): 1<br/>           Alert score: 9.990         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>IMMEDIATE ACTION: Activate emergency generators now. Alert backup power team. Notify generator fuel supplier. Contact backup facility for patient diversion plan.</span>       </div>     </div></div>`)[0];
+                popup_da77292ac8b2e992d1f484cc1437bea2.setContent(html_2aa392b2c11f8cf3fd77a3fdbf7cd15a);
+            
+        
+
+        marker_0ea94f9eb5207afd155196a6fff94fcd.bindPopup(popup_da77292ac8b2e992d1f484cc1437bea2)
+        ;
+
+        
+    
+    
+            marker_0ea94f9eb5207afd155196a6fff94fcd.bindTooltip(
+                `<div>
+                     CRITICAL: Winthrop University Hospital
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_0ea94f9eb5207afd155196a6fff94fcd.setIcon(icon_cc51905346f46a7a87771afc94709f98);
+            
+    
+            var marker_2fc7080a29ca5f793ff9809070b26825 = L.marker(
+                [40.8623, -73.6254],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_7c61bed398a75b8e1e19010c9c779f2e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "plus-square",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_83f7eafc370a030b3e44c34bf5d3209f = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_663ce39d348d7e9c69f98cb6ab5659f9 = $(`<div id="html_663ce39d348d7e9c69f98cb6ab5659f9" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#ef4444;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         CRITICAL ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Glen Cove Hospital</b><br/>Beds: <b>281</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Mineola Substation<br/>           Substation risk: 0.999<br/>           Distance (hops): 1<br/>           Alert score: 9.990         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>IMMEDIATE ACTION: Activate emergency generators now. Alert backup power team. Notify generator fuel supplier. Contact backup facility for patient diversion plan.</span>       </div>     </div></div>`)[0];
+                popup_83f7eafc370a030b3e44c34bf5d3209f.setContent(html_663ce39d348d7e9c69f98cb6ab5659f9);
+            
+        
+
+        marker_2fc7080a29ca5f793ff9809070b26825.bindPopup(popup_83f7eafc370a030b3e44c34bf5d3209f)
+        ;
+
+        
+    
+    
+            marker_2fc7080a29ca5f793ff9809070b26825.bindTooltip(
+                `<div>
+                     CRITICAL: Glen Cove Hospital
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_2fc7080a29ca5f793ff9809070b26825.setIcon(icon_7c61bed398a75b8e1e19010c9c779f2e);
+            
+    
+            var marker_4b60337b7aac069a8b51d8ecd6c6c4ea = L.marker(
+                [40.7193, -73.5965],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_48a212502a2b2bfd53ecf78b0f7c3b8d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "plus-square",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_ec758bdaf32db2778240ecc9b5ef7ff0 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_4a5498abcd465072c03cf6a27377986f = $(`<div id="html_4a5498abcd465072c03cf6a27377986f" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#ef4444;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         CRITICAL ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>NYU Langone Hospital Long Island</b><br/>Beds: <b>290</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Garden City Substation<br/>           Substation risk: 0.999<br/>           Distance (hops): 1<br/>           Alert score: 9.990         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>IMMEDIATE ACTION: Activate emergency generators now. Alert backup power team. Notify generator fuel supplier. Contact backup facility for patient diversion plan.</span>       </div>     </div></div>`)[0];
+                popup_ec758bdaf32db2778240ecc9b5ef7ff0.setContent(html_4a5498abcd465072c03cf6a27377986f);
+            
+        
+
+        marker_4b60337b7aac069a8b51d8ecd6c6c4ea.bindPopup(popup_ec758bdaf32db2778240ecc9b5ef7ff0)
+        ;
+
+        
+    
+    
+            marker_4b60337b7aac069a8b51d8ecd6c6c4ea.bindTooltip(
+                `<div>
+                     CRITICAL: NYU Langone Hospital Long Island
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_4b60337b7aac069a8b51d8ecd6c6c4ea.setIcon(icon_48a212502a2b2bfd53ecf78b0f7c3b8d);
+            
+    
+            var marker_f095213bd62be9e48bcb52b80fdde635 = L.marker(
+                [40.6655, -73.5205],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_4b398a9e38de36ebf0972d89d0f7ba7f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "plus-square",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f6007460a57d312a4939cb0df5c9fd86 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_a9a363a33c3a52899302e617c498e578 = $(`<div id="html_a9a363a33c3a52899302e617c498e578" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#ef4444;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         CRITICAL ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>South Shore University Hospital</b><br/>Beds: <b>300</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Freeport Substation<br/>           Substation risk: 0.984<br/>           Distance (hops): 1<br/>           Alert score: 9.842         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>IMMEDIATE ACTION: Activate emergency generators now. Alert backup power team. Notify generator fuel supplier. Contact backup facility for patient diversion plan.</span>       </div>     </div></div>`)[0];
+                popup_f6007460a57d312a4939cb0df5c9fd86.setContent(html_a9a363a33c3a52899302e617c498e578);
+            
+        
+
+        marker_f095213bd62be9e48bcb52b80fdde635.bindPopup(popup_f6007460a57d312a4939cb0df5c9fd86)
+        ;
+
+        
+    
+    
+            marker_f095213bd62be9e48bcb52b80fdde635.bindTooltip(
+                `<div>
+                     CRITICAL: South Shore University Hospital
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_f095213bd62be9e48bcb52b80fdde635.setIcon(icon_4b398a9e38de36ebf0972d89d0f7ba7f);
+            
+    
+            var marker_c2200efc1d3d032c0252d9605b62b204 = L.marker(
+                [40.7731, -73.5553],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_66f9dd7b572860b9af694c81615932d9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "plus-square",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_0b39da519441af47467aadf6be18add5 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_d637afb9f94632442cf2ac1b52f4b23b = $(`<div id="html_d637afb9f94632442cf2ac1b52f4b23b" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#ef4444;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         CRITICAL ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>North Shore University Hospital</b><br/>Beds: <b>800</b> | Trauma: <b>LEVEL I</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Hicksville Substation<br/>           Substation risk: 0.984<br/>           Distance (hops): 1<br/>           Alert score: 9.842         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>IMMEDIATE ACTION: Activate emergency generators now. Alert backup power team. Notify generator fuel supplier. Contact backup facility for patient diversion plan.</span>       </div>     </div></div>`)[0];
+                popup_0b39da519441af47467aadf6be18add5.setContent(html_d637afb9f94632442cf2ac1b52f4b23b);
+            
+        
+
+        marker_c2200efc1d3d032c0252d9605b62b204.bindPopup(popup_0b39da519441af47467aadf6be18add5)
+        ;
+
+        
+    
+    
+            marker_c2200efc1d3d032c0252d9605b62b204.bindTooltip(
+                `<div>
+                     CRITICAL: North Shore University Hospital
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_c2200efc1d3d032c0252d9605b62b204.setIcon(icon_66f9dd7b572860b9af694c81615932d9);
+            
+    
+            var marker_fd742f84e88de8a29b6938be74e49354 = L.marker(
+                [40.8812, -73.4256],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_993c48bee3a2aa4d5d0e67159d71a017 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "plus-square",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_ad156989ecf66233169e06481dbcae64 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_e4bb8a7eb01593eabd6572fd11883474 = $(`<div id="html_e4bb8a7eb01593eabd6572fd11883474" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#ef4444;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         CRITICAL ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Huntington Hospital</b><br/>Beds: <b>408</b> | Trauma: <b>LEVEL III</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Hicksville Substation<br/>           Substation risk: 0.984<br/>           Distance (hops): 1<br/>           Alert score: 9.842         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>IMMEDIATE ACTION: Activate emergency generators now. Alert backup power team. Notify generator fuel supplier. Contact backup facility for patient diversion plan.</span>       </div>     </div></div>`)[0];
+                popup_ad156989ecf66233169e06481dbcae64.setContent(html_e4bb8a7eb01593eabd6572fd11883474);
+            
+        
+
+        marker_fd742f84e88de8a29b6938be74e49354.bindPopup(popup_ad156989ecf66233169e06481dbcae64)
+        ;
+
+        
+    
+    
+            marker_fd742f84e88de8a29b6938be74e49354.bindTooltip(
+                `<div>
+                     CRITICAL: Huntington Hospital
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_fd742f84e88de8a29b6938be74e49354.setIcon(icon_993c48bee3a2aa4d5d0e67159d71a017);
+            
+    
+            var marker_7bea5cb1ba82895d707f36d2c91b7441 = L.marker(
+                [40.7239, -73.1496],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_6e10ae51f69e6afeb0911c108eea789d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "plus-square",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d7b4e3e4a52ddf8ff384d04a38074d2e = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_5b85972de8fd4b71b21d4f38f7689bbe = $(`<div id="html_5b85972de8fd4b71b21d4f38f7689bbe" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#ef4444;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         CRITICAL ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Good Samaritan Hospital Medical Center</b><br/>Beds: <b>437</b> | Trauma: <b>LEVEL II</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Brentwood Substation<br/>           Substation risk: 0.837<br/>           Distance (hops): 1<br/>           Alert score: 8.365         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>PREPARE: Test emergency generators within 2 hours. Confirm fuel reserves sufficient for 72h. Alert on-call engineering staff. Brief department heads.</span>       </div>     </div></div>`)[0];
+                popup_d7b4e3e4a52ddf8ff384d04a38074d2e.setContent(html_5b85972de8fd4b71b21d4f38f7689bbe);
+            
+        
+
+        marker_7bea5cb1ba82895d707f36d2c91b7441.bindPopup(popup_d7b4e3e4a52ddf8ff384d04a38074d2e)
+        ;
+
+        
+    
+    
+            marker_7bea5cb1ba82895d707f36d2c91b7441.bindTooltip(
+                `<div>
+                     CRITICAL: Good Samaritan Hospital Medical Center
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_7bea5cb1ba82895d707f36d2c91b7441.setIcon(icon_6e10ae51f69e6afeb0911c108eea789d);
+            
+    
+            var marker_753ba25d77ac22e4eb676fffe3c81736 = L.marker(
+                [40.7325, -73.1538],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_ae4c1aff46136c02bc25494f0af3b056 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "plus-square",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_2508fbdd9f74d4d9228b699c04f62cad = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_9158e8660c0b016eefc34789788d05fc = $(`<div id="html_9158e8660c0b016eefc34789788d05fc" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#ef4444;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         CRITICAL ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Southside Hospital</b><br/>Beds: <b>350</b> | Trauma: <b>LEVEL II</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Brentwood Substation<br/>           Substation risk: 0.837<br/>           Distance (hops): 1<br/>           Alert score: 8.365         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>PREPARE: Test emergency generators within 2 hours. Confirm fuel reserves sufficient for 72h. Alert on-call engineering staff. Brief department heads.</span>       </div>     </div></div>`)[0];
+                popup_2508fbdd9f74d4d9228b699c04f62cad.setContent(html_9158e8660c0b016eefc34789788d05fc);
+            
+        
+
+        marker_753ba25d77ac22e4eb676fffe3c81736.bindPopup(popup_2508fbdd9f74d4d9228b699c04f62cad)
+        ;
+
+        
+    
+    
+            marker_753ba25d77ac22e4eb676fffe3c81736.bindTooltip(
+                `<div>
+                     CRITICAL: Southside Hospital
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_753ba25d77ac22e4eb676fffe3c81736.setIcon(icon_ae4c1aff46136c02bc25494f0af3b056);
+            
+    
+            var marker_a3ea2a9d98832900b9fdedeba5f6cffd = L.marker(
+                [40.9192, -72.6543],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_c4a8950dac5887018d42b78a8066bdfe = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "plus-square",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f0af05f5830fb955f1552e05e31af5e3 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_cd22e9a8e3c42f6a37c8c31c5b45691b = $(`<div id="html_cd22e9a8e3c42f6a37c8c31c5b45691b" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#ef4444;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         CRITICAL ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Peconic Bay Medical Center</b><br/>Beds: <b>160</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Riverhead Substation<br/>           Substation risk: 0.837<br/>           Distance (hops): 1<br/>           Alert score: 8.365         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>PREPARE: Test emergency generators within 2 hours. Confirm fuel reserves sufficient for 72h. Alert on-call engineering staff. Brief department heads.</span>       </div>     </div></div>`)[0];
+                popup_f0af05f5830fb955f1552e05e31af5e3.setContent(html_cd22e9a8e3c42f6a37c8c31c5b45691b);
+            
+        
+
+        marker_a3ea2a9d98832900b9fdedeba5f6cffd.bindPopup(popup_f0af05f5830fb955f1552e05e31af5e3)
+        ;
+
+        
+    
+    
+            marker_a3ea2a9d98832900b9fdedeba5f6cffd.bindTooltip(
+                `<div>
+                     CRITICAL: Peconic Bay Medical Center
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_a3ea2a9d98832900b9fdedeba5f6cffd.setIcon(icon_c4a8950dac5887018d42b78a8066bdfe);
+            
+    
+            var marker_79d6e5df595915c0d17ca14794041523 = L.marker(
+                [40.9121, -73.1137],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_9e8d01acd9385316179fbe69ded8dadf = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "plus-square",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_39052f811f626db5b484612798a86563 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_87560f556f1e5674d22ab86c01be01ba = $(`<div id="html_87560f556f1e5674d22ab86c01be01ba" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#ef4444;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         CRITICAL ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Stony Brook University Hospital</b><br/>Beds: <b>603</b> | Trauma: <b>LEVEL I</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Ronkonkoma Substation<br/>           Substation risk: 0.837<br/>           Distance (hops): 1<br/>           Alert score: 8.365         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>PREPARE: Test emergency generators within 2 hours. Confirm fuel reserves sufficient for 72h. Alert on-call engineering staff. Brief department heads.</span>       </div>     </div></div>`)[0];
+                popup_39052f811f626db5b484612798a86563.setContent(html_87560f556f1e5674d22ab86c01be01ba);
+            
+        
+
+        marker_79d6e5df595915c0d17ca14794041523.bindPopup(popup_39052f811f626db5b484612798a86563)
+        ;
+
+        
+    
+    
+            marker_79d6e5df595915c0d17ca14794041523.bindTooltip(
+                `<div>
+                     CRITICAL: Stony Brook University Hospital
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_79d6e5df595915c0d17ca14794041523.setIcon(icon_9e8d01acd9385316179fbe69ded8dadf);
+            
+    
+            var marker_1aa6e3c70b8aab722c42d3e96f679aee = L.marker(
+                [40.8692, -73.1149],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_2d3a7c374a8a8586159024e799c4f34d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "plus-square",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_b0997bd0943427d5e8ac3b439b5091b4 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_9cbcc55766be32d4cd905de59ab8d7be = $(`<div id="html_9cbcc55766be32d4cd905de59ab8d7be" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#ef4444;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         CRITICAL ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>St. Catherine of Siena Medical Center</b><br/>Beds: <b>250</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Ronkonkoma Substation<br/>           Substation risk: 0.837<br/>           Distance (hops): 1<br/>           Alert score: 8.365         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>PREPARE: Test emergency generators within 2 hours. Confirm fuel reserves sufficient for 72h. Alert on-call engineering staff. Brief department heads.</span>       </div>     </div></div>`)[0];
+                popup_b0997bd0943427d5e8ac3b439b5091b4.setContent(html_9cbcc55766be32d4cd905de59ab8d7be);
+            
+        
+
+        marker_1aa6e3c70b8aab722c42d3e96f679aee.bindPopup(popup_b0997bd0943427d5e8ac3b439b5091b4)
+        ;
+
+        
+    
+    
+            marker_1aa6e3c70b8aab722c42d3e96f679aee.bindTooltip(
+                `<div>
+                     CRITICAL: St. Catherine of Siena Medical Center
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_1aa6e3c70b8aab722c42d3e96f679aee.setIcon(icon_2d3a7c374a8a8586159024e799c4f34d);
+            
+    
+            var marker_c91cf96a3e5986d67096b58c8e1fc58c = L.marker(
+                [40.9463, -73.0482],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_09df9b4a5a66463cd41ee2a5138ca177 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "plus-square",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_388086c296c1974be760f23ed5ed03f9 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_d60f1a031cb471671b452f08315cffa3 = $(`<div id="html_d60f1a031cb471671b452f08315cffa3" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#ef4444;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         CRITICAL ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>John T. Mather Memorial Hospital</b><br/>Beds: <b>248</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Port Jefferson Substation<br/>           Substation risk: 0.837<br/>           Distance (hops): 1<br/>           Alert score: 8.365         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>PREPARE: Test emergency generators within 2 hours. Confirm fuel reserves sufficient for 72h. Alert on-call engineering staff. Brief department heads.</span>       </div>     </div></div>`)[0];
+                popup_388086c296c1974be760f23ed5ed03f9.setContent(html_d60f1a031cb471671b452f08315cffa3);
+            
+        
+
+        marker_c91cf96a3e5986d67096b58c8e1fc58c.bindPopup(popup_388086c296c1974be760f23ed5ed03f9)
+        ;
+
+        
+    
+    
+            marker_c91cf96a3e5986d67096b58c8e1fc58c.bindTooltip(
+                `<div>
+                     CRITICAL: John T. Mather Memorial Hospital
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_c91cf96a3e5986d67096b58c8e1fc58c.setIcon(icon_09df9b4a5a66463cd41ee2a5138ca177);
+            
+    
+            var marker_01c7251be06b4107c3f909afafe189bc = L.marker(
+                [40.7454, -73.6399],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_4a6b01413dcec1cf2cf15af6737396cb = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c2709edc5b0432844f7226d05d556878 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_6effa4bf77d1c4e259588556a0320bae = $(`<div id="html_6effa4bf77d1c4e259588556a0320bae" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#f59e0b;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         HIGH ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Mineola FD</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Mineola Substation<br/>           Substation risk: 0.999<br/>           Distance (hops): 1<br/>           Alert score: 6.993         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>IMMEDIATE ACTION: Deploy mobile generator. Activate backup communications. Pre-position apparatus for storm response. Fuel all vehicles.</span>       </div>     </div></div>`)[0];
+                popup_c2709edc5b0432844f7226d05d556878.setContent(html_6effa4bf77d1c4e259588556a0320bae);
+            
+        
+
+        marker_01c7251be06b4107c3f909afafe189bc.bindPopup(popup_c2709edc5b0432844f7226d05d556878)
+        ;
+
+        
+    
+    
+            marker_01c7251be06b4107c3f909afafe189bc.bindTooltip(
+                `<div>
+                     HIGH: Mineola FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_01c7251be06b4107c3f909afafe189bc.setIcon(icon_4a6b01413dcec1cf2cf15af6737396cb);
+            
+    
+            var marker_21aef63ae3de0a279ea229e027585a95 = L.marker(
+                [40.7268, -73.6346],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_b9a755e323f54d55cfce11a328e1c630 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_ac4c431fd97b2fdec7bce974bca1b978 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_aff4a69c39713f299b36443bbceef7de = $(`<div id="html_aff4a69c39713f299b36443bbceef7de" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#f59e0b;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         HIGH ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Garden City FD</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Mineola Substation<br/>           Substation risk: 0.999<br/>           Distance (hops): 1<br/>           Alert score: 6.993         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>IMMEDIATE ACTION: Deploy mobile generator. Activate backup communications. Pre-position apparatus for storm response. Fuel all vehicles.</span>       </div>     </div></div>`)[0];
+                popup_ac4c431fd97b2fdec7bce974bca1b978.setContent(html_aff4a69c39713f299b36443bbceef7de);
+            
+        
+
+        marker_21aef63ae3de0a279ea229e027585a95.bindPopup(popup_ac4c431fd97b2fdec7bce974bca1b978)
+        ;
+
+        
+    
+    
+            marker_21aef63ae3de0a279ea229e027585a95.bindTooltip(
+                `<div>
+                     HIGH: Garden City FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_21aef63ae3de0a279ea229e027585a95.setIcon(icon_b9a755e323f54d55cfce11a328e1c630);
+            
+    
+            var marker_8d96c916b2db4d4770951933d7f1178c = L.marker(
+                [40.7062, -73.6188],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_077b64ab41929cfa3bf3ceb3d13c1aa6 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_eec7714d76d5b2cfd79b40cd722abd10 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_cc8aa3aa3bb07178e38324d65153633f = $(`<div id="html_cc8aa3aa3bb07178e38324d65153633f" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#f59e0b;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         HIGH ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Hempstead FD</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Garden City Substation<br/>           Substation risk: 0.999<br/>           Distance (hops): 1<br/>           Alert score: 6.993         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>IMMEDIATE ACTION: Deploy mobile generator. Activate backup communications. Pre-position apparatus for storm response. Fuel all vehicles.</span>       </div>     </div></div>`)[0];
+                popup_eec7714d76d5b2cfd79b40cd722abd10.setContent(html_cc8aa3aa3bb07178e38324d65153633f);
+            
+        
+
+        marker_8d96c916b2db4d4770951933d7f1178c.bindPopup(popup_eec7714d76d5b2cfd79b40cd722abd10)
+        ;
+
+        
+    
+    
+            marker_8d96c916b2db4d4770951933d7f1178c.bindTooltip(
+                `<div>
+                     HIGH: Hempstead FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_8d96c916b2db4d4770951933d7f1178c.setIcon(icon_077b64ab41929cfa3bf3ceb3d13c1aa6);
+            
+    
+            var marker_389c61a9209c0849492325c558b04c24 = L.marker(
+                [40.6626, -73.7082],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_02ee24df601efcd46bee50a5830f8237 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_511e8a420bbdbfd3c8d3f24d5cb81809 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_ea9cf58b403f72df164fb6eef0711d7b = $(`<div id="html_ea9cf58b403f72df164fb6eef0711d7b" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#f59e0b;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         HIGH ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Valley Stream FD</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Garden City Substation<br/>           Substation risk: 0.999<br/>           Distance (hops): 1<br/>           Alert score: 6.993         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>IMMEDIATE ACTION: Deploy mobile generator. Activate backup communications. Pre-position apparatus for storm response. Fuel all vehicles.</span>       </div>     </div></div>`)[0];
+                popup_511e8a420bbdbfd3c8d3f24d5cb81809.setContent(html_ea9cf58b403f72df164fb6eef0711d7b);
+            
+        
+
+        marker_389c61a9209c0849492325c558b04c24.bindPopup(popup_511e8a420bbdbfd3c8d3f24d5cb81809)
+        ;
+
+        
+    
+    
+            marker_389c61a9209c0849492325c558b04c24.bindTooltip(
+                `<div>
+                     HIGH: Valley Stream FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_389c61a9209c0849492325c558b04c24.setIcon(icon_02ee24df601efcd46bee50a5830f8237);
+            
+    
+            var marker_153dde697156ead603f755d54717552c = L.marker(
+                [40.8695, -73.4256],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_b761558fd15f981d7fcf9ae9bc53d677 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_1eec802c1294823a9321901dbc474f5c = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_cede59fd3559a372c0ff7d9d5fc949f4 = $(`<div id="html_cede59fd3559a372c0ff7d9d5fc949f4" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#f59e0b;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         HIGH ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Huntington FD</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Bethpage Substation<br/>           Substation risk: 0.984<br/>           Distance (hops): 1<br/>           Alert score: 6.889         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>IMMEDIATE ACTION: Deploy mobile generator. Activate backup communications. Pre-position apparatus for storm response. Fuel all vehicles.</span>       </div>     </div></div>`)[0];
+                popup_1eec802c1294823a9321901dbc474f5c.setContent(html_cede59fd3559a372c0ff7d9d5fc949f4);
+            
+        
+
+        marker_153dde697156ead603f755d54717552c.bindPopup(popup_1eec802c1294823a9321901dbc474f5c)
+        ;
+
+        
+    
+    
+            marker_153dde697156ead603f755d54717552c.bindTooltip(
+                `<div>
+                     HIGH: Huntington FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_153dde697156ead603f755d54717552c.setIcon(icon_b761558fd15f981d7fcf9ae9bc53d677);
+            
+    
+            var marker_fdf1447f2c4f4a88eb8d463009864942 = L.marker(
+                [40.6815, -73.4588],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_5a2993f85b4abadef81973b000fe38e3 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_871199f0bde505d82bbf9c1bf71be307 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_7986563453232f4ae4e4277596b26e07 = $(`<div id="html_7986563453232f4ae4e4277596b26e07" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#f59e0b;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         HIGH ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Massapequa FD</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Farmingdale Substation<br/>           Substation risk: 0.984<br/>           Distance (hops): 1<br/>           Alert score: 6.889         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>IMMEDIATE ACTION: Deploy mobile generator. Activate backup communications. Pre-position apparatus for storm response. Fuel all vehicles.</span>       </div>     </div></div>`)[0];
+                popup_871199f0bde505d82bbf9c1bf71be307.setContent(html_7986563453232f4ae4e4277596b26e07);
+            
+        
+
+        marker_fdf1447f2c4f4a88eb8d463009864942.bindPopup(popup_871199f0bde505d82bbf9c1bf71be307)
+        ;
+
+        
+    
+    
+            marker_fdf1447f2c4f4a88eb8d463009864942.bindTooltip(
+                `<div>
+                     HIGH: Massapequa FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_fdf1447f2c4f4a88eb8d463009864942.setIcon(icon_5a2993f85b4abadef81973b000fe38e3);
+            
+    
+            var marker_e6afb773222bbadff180d7b43eea7ca9 = L.marker(
+                [40.7025, -73.3196],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_57ee98071752ed4f91f21e975dcf3572 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_87e73acb31af96c30a617a8fe6c7218b = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_84eb11050dad70f0513e35b70bc4e1f6 = $(`<div id="html_84eb11050dad70f0513e35b70bc4e1f6" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#f59e0b;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         HIGH ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Babylon FD</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Babylon Substation<br/>           Substation risk: 0.837<br/>           Distance (hops): 1<br/>           Alert score: 5.856         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>PREPARE: Confirm backup power status. Brief crew on storm protocols. Stage equipment for rapid deployment.</span>       </div>     </div></div>`)[0];
+                popup_87e73acb31af96c30a617a8fe6c7218b.setContent(html_84eb11050dad70f0513e35b70bc4e1f6);
+            
+        
+
+        marker_e6afb773222bbadff180d7b43eea7ca9.bindPopup(popup_87e73acb31af96c30a617a8fe6c7218b)
+        ;
+
+        
+    
+    
+            marker_e6afb773222bbadff180d7b43eea7ca9.bindTooltip(
+                `<div>
+                     HIGH: Babylon FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_e6afb773222bbadff180d7b43eea7ca9.setIcon(icon_57ee98071752ed4f91f21e975dcf3572);
+            
+    
+            var marker_32f39fc14a07f69ce4f9aec96fa60c94 = L.marker(
+                [40.7284, -73.248],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_f01e93eb076edc9357b6669f8396b123 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_b0b6bf77852b90a359b608e12e450235 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_9aa20f235ff2c4285febe2b7b6e1d614 = $(`<div id="html_9aa20f235ff2c4285febe2b7b6e1d614" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#f59e0b;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         HIGH ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Bay Shore FD</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Babylon Substation<br/>           Substation risk: 0.837<br/>           Distance (hops): 1<br/>           Alert score: 5.856         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>PREPARE: Confirm backup power status. Brief crew on storm protocols. Stage equipment for rapid deployment.</span>       </div>     </div></div>`)[0];
+                popup_b0b6bf77852b90a359b608e12e450235.setContent(html_9aa20f235ff2c4285febe2b7b6e1d614);
+            
+        
+
+        marker_32f39fc14a07f69ce4f9aec96fa60c94.bindPopup(popup_b0b6bf77852b90a359b608e12e450235)
+        ;
+
+        
+    
+    
+            marker_32f39fc14a07f69ce4f9aec96fa60c94.bindTooltip(
+                `<div>
+                     HIGH: Bay Shore FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_32f39fc14a07f69ce4f9aec96fa60c94.setIcon(icon_f01e93eb076edc9357b6669f8396b123);
+            
+    
+            var marker_a38e4dfc6111173b62049937cd2f944d = L.marker(
+                [40.6906, -73.3729],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_5b780118695a0a770a22e96bf73cb89e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e314547afa18d838c444fb7c2b4ecfbf = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_00621b2991869e72b4ce7aedc5e3bb3e = $(`<div id="html_00621b2991869e72b4ce7aedc5e3bb3e" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#f59e0b;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         HIGH ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Lindenhurst FD</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Babylon Substation<br/>           Substation risk: 0.837<br/>           Distance (hops): 1<br/>           Alert score: 5.856         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>PREPARE: Confirm backup power status. Brief crew on storm protocols. Stage equipment for rapid deployment.</span>       </div>     </div></div>`)[0];
+                popup_e314547afa18d838c444fb7c2b4ecfbf.setContent(html_00621b2991869e72b4ce7aedc5e3bb3e);
+            
+        
+
+        marker_a38e4dfc6111173b62049937cd2f944d.bindPopup(popup_e314547afa18d838c444fb7c2b4ecfbf)
+        ;
+
+        
+    
+    
+            marker_a38e4dfc6111173b62049937cd2f944d.bindTooltip(
+                `<div>
+                     HIGH: Lindenhurst FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_a38e4dfc6111173b62049937cd2f944d.setIcon(icon_5b780118695a0a770a22e96bf73cb89e);
+            
+    
+            var marker_9184fc82de648f5b854d49b69dbe009c = L.marker(
+                [40.8434, -73.302],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_8c35aba6e116f019dc775ebf03ccf300 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c1382f61bb22e8e4fadbe8402c57dbef = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_3311ea1991e4769ae625ac6f18cc8ba2 = $(`<div id="html_3311ea1991e4769ae625ac6f18cc8ba2" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#f59e0b;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         HIGH ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Commack FD</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Brentwood Substation<br/>           Substation risk: 0.837<br/>           Distance (hops): 1<br/>           Alert score: 5.856         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>PREPARE: Confirm backup power status. Brief crew on storm protocols. Stage equipment for rapid deployment.</span>       </div>     </div></div>`)[0];
+                popup_c1382f61bb22e8e4fadbe8402c57dbef.setContent(html_3311ea1991e4769ae625ac6f18cc8ba2);
+            
+        
+
+        marker_9184fc82de648f5b854d49b69dbe009c.bindPopup(popup_c1382f61bb22e8e4fadbe8402c57dbef)
+        ;
+
+        
+    
+    
+            marker_9184fc82de648f5b854d49b69dbe009c.bindTooltip(
+                `<div>
+                     HIGH: Commack FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_9184fc82de648f5b854d49b69dbe009c.setIcon(icon_8c35aba6e116f019dc775ebf03ccf300);
+            
+    
+            var marker_e483ca54b0655217cf17c09e4a67ddc6 = L.marker(
+                [40.7812, -73.2453],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_002facb176f034bf907940716e45f1d2 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_ffc115c10fef70055d767a01e6d06812 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_e97c1a4c72d1fa444212858f3354a0a7 = $(`<div id="html_e97c1a4c72d1fa444212858f3354a0a7" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#f59e0b;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         HIGH ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Brentwood FD</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Hauppauge Substation<br/>           Substation risk: 0.837<br/>           Distance (hops): 1<br/>           Alert score: 5.856         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>PREPARE: Confirm backup power status. Brief crew on storm protocols. Stage equipment for rapid deployment.</span>       </div>     </div></div>`)[0];
+                popup_ffc115c10fef70055d767a01e6d06812.setContent(html_e97c1a4c72d1fa444212858f3354a0a7);
+            
+        
+
+        marker_e483ca54b0655217cf17c09e4a67ddc6.bindPopup(popup_ffc115c10fef70055d767a01e6d06812)
+        ;
+
+        
+    
+    
+            marker_e483ca54b0655217cf17c09e4a67ddc6.bindTooltip(
+                `<div>
+                     HIGH: Brentwood FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_e483ca54b0655217cf17c09e4a67ddc6.setIcon(icon_002facb176f034bf907940716e45f1d2);
+            
+    
+            var marker_121aff5a6e74cef62ee1f7f44ba7c014 = L.marker(
+                [40.8229, -73.2079],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_98301b874987efbf60dad3a5db056d26 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_26c172da7ef69682abf83df65ef6c6af = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_faf780a207ae19a6f3ebe1f238d6ad32 = $(`<div id="html_faf780a207ae19a6f3ebe1f238d6ad32" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#f59e0b;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         HIGH ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Hauppauge FD</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Hauppauge Substation<br/>           Substation risk: 0.837<br/>           Distance (hops): 1<br/>           Alert score: 5.856         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>PREPARE: Confirm backup power status. Brief crew on storm protocols. Stage equipment for rapid deployment.</span>       </div>     </div></div>`)[0];
+                popup_26c172da7ef69682abf83df65ef6c6af.setContent(html_faf780a207ae19a6f3ebe1f238d6ad32);
+            
+        
+
+        marker_121aff5a6e74cef62ee1f7f44ba7c014.bindPopup(popup_26c172da7ef69682abf83df65ef6c6af)
+        ;
+
+        
+    
+    
+            marker_121aff5a6e74cef62ee1f7f44ba7c014.bindTooltip(
+                `<div>
+                     HIGH: Hauppauge FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_121aff5a6e74cef62ee1f7f44ba7c014.setIcon(icon_98301b874987efbf60dad3a5db056d26);
+            
+    
+            var marker_88cb1348fecd6dbfe5b926e8d7c021b5 = L.marker(
+                [40.729, -73.2121],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_34ff780999f2b700d0ab7f100742b623 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_8439e62142d50781269c551874937f05 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_60de221d95c6d403fd033238bb9ef0b7 = $(`<div id="html_60de221d95c6d403fd033238bb9ef0b7" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#f59e0b;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         HIGH ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Islip FD</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Hauppauge Substation<br/>           Substation risk: 0.837<br/>           Distance (hops): 1<br/>           Alert score: 5.856         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>PREPARE: Confirm backup power status. Brief crew on storm protocols. Stage equipment for rapid deployment.</span>       </div>     </div></div>`)[0];
+                popup_8439e62142d50781269c551874937f05.setContent(html_60de221d95c6d403fd033238bb9ef0b7);
+            
+        
+
+        marker_88cb1348fecd6dbfe5b926e8d7c021b5.bindPopup(popup_8439e62142d50781269c551874937f05)
+        ;
+
+        
+    
+    
+            marker_88cb1348fecd6dbfe5b926e8d7c021b5.bindTooltip(
+                `<div>
+                     HIGH: Islip FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_88cb1348fecd6dbfe5b926e8d7c021b5.setIcon(icon_34ff780999f2b700d0ab7f100742b623);
+            
+    
+            var marker_4f427250690f51ae8696b94b8ba879c4 = L.marker(
+                [40.9148, -72.6626],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_06e155c96c50c91829eff7c2d110844c = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_7071fdcadc27c1ab26c88f0614c73152 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_5812439d126d9e7834bf0da936964920 = $(`<div id="html_5812439d126d9e7834bf0da936964920" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#f59e0b;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         HIGH ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Riverhead FD</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Riverhead Substation<br/>           Substation risk: 0.837<br/>           Distance (hops): 1<br/>           Alert score: 5.856         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>PREPARE: Confirm backup power status. Brief crew on storm protocols. Stage equipment for rapid deployment.</span>       </div>     </div></div>`)[0];
+                popup_7071fdcadc27c1ab26c88f0614c73152.setContent(html_5812439d126d9e7834bf0da936964920);
+            
+        
+
+        marker_4f427250690f51ae8696b94b8ba879c4.bindPopup(popup_7071fdcadc27c1ab26c88f0614c73152)
+        ;
+
+        
+    
+    
+            marker_4f427250690f51ae8696b94b8ba879c4.bindTooltip(
+                `<div>
+                     HIGH: Riverhead FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_4f427250690f51ae8696b94b8ba879c4.setIcon(icon_06e155c96c50c91829eff7c2d110844c);
+            
+    
+            var marker_c4d81f7f6908ea03b1e15cca3dc2edc2 = L.marker(
+                [40.765, -73.0149],
+                {
+}
+            ).addTo(feature_group_8327de6e68d62b95828ff8e6dd27e86b);
+        
+    
+            var icon_226faab0680534468a4b8fcf157e1556 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "fire",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_2e91f02b262014a874e82473c550d115 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_59af1b5a461033ad21fbf0998721a34c = $(`<div id="html_59af1b5a461033ad21fbf0998721a34c" style="width: 100.0%; height: 100.0%;">     <div style='font-family:sans-serif;min-width:240px;max-width:300px;'>       <div style='background:#f59e0b;color:white;padding:6px 10px;                   border-radius:4px 4px 0 0;font-weight:bold;'>         HIGH ALERT       </div>       <div style='padding:8px 10px;border:1px solid #e2e8f0;'>         <b>Patchogue FD</b><br/>         <span style='color:#64748b;font-size:11px;'>           Feeding substation: Patchogue Substation<br/>           Substation risk: 0.837<br/>           Distance (hops): 1<br/>           Alert score: 5.856         </span>         <hr style='margin:6px 0;border-color:#e2e8f0;'/>         <b style='color:#1d4ed8;'>Recommended Action:</b><br/>         <span style='font-size:11px;'>PREPARE: Confirm backup power status. Brief crew on storm protocols. Stage equipment for rapid deployment.</span>       </div>     </div></div>`)[0];
+                popup_2e91f02b262014a874e82473c550d115.setContent(html_59af1b5a461033ad21fbf0998721a34c);
+            
+        
+
+        marker_c4d81f7f6908ea03b1e15cca3dc2edc2.bindPopup(popup_2e91f02b262014a874e82473c550d115)
+        ;
+
+        
+    
+    
+            marker_c4d81f7f6908ea03b1e15cca3dc2edc2.bindTooltip(
+                `<div>
+                     HIGH: Patchogue FD
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_c4d81f7f6908ea03b1e15cca3dc2edc2.setIcon(icon_226faab0680534468a4b8fcf157e1556);
+            
+    
+            feature_group_8327de6e68d62b95828ff8e6dd27e86b.addTo(map_4af6ba75e55c6394c7e14b78b79884d0);
+        
+    
+            var layer_control_e9fb5c78849ad6686ee61268a33c3925_layers = {
+                base_layers : {
+                    "cartodbdarkmatter" : tile_layer_888d919e0e764a742675bb60282b7c1b,
+                },
+                overlays :  {
+                    "macro_element_952d5d35e1f5b17021bc65d944dfd7d9" : geo_json_952d5d35e1f5b17021bc65d944dfd7d9,
+                    "Power Lines" : feature_group_d6f76edc956f9e03eea36271f3aa2e3f,
+                    "Substations" : feature_group_632fda3a48b22211198455cd6b994d18,
+                    "Alert Routes" : feature_group_a370a6bbdc3a7b3103d91d7786de1a30,
+                    "Critical Facility Alerts" : feature_group_8327de6e68d62b95828ff8e6dd27e86b,
+                },
+            };
+            let layer_control_e9fb5c78849ad6686ee61268a33c3925 = L.control.layers(
+                layer_control_e9fb5c78849ad6686ee61268a33c3925_layers.base_layers,
+                layer_control_e9fb5c78849ad6686ee61268a33c3925_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_4af6ba75e55c6394c7e14b78b79884d0);
+
+        
+</script>
+</html>
