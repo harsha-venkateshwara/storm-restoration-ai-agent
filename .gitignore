@@ -16,6 +16,10 @@ outputs/models/training_results.pkl
 !outputs/models/evaluation_results.pkl
 !outputs/models/county_priority_2022.parquet
 
+outputs/models/*.pkl
+data/graph/*.pkl
+cache/
+
 # Python
 __pycache__/
 *.pyc
