@@ -2,7 +2,7 @@
 
 **A full-stack deep learning platform for power outage forecasting, smart grid topology analysis, and pre-storm critical facility alerting.**
 
-Author: Harsha Venkateshwara, Saba Minaz Taj
+Author: Harsha Venkateshwara
 Course: CSE 676A Deep Learning, University at Buffalo, Spring 2026
 
 ---
